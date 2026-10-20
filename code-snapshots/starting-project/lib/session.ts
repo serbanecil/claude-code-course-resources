@@ -10,7 +10,7 @@ export async function getSession() {
 /** For server components: redirects to /auth when unauthenticated. */
 export async function requireSession() {
   const session = await getSession();
-  if (!session) redirect("/auth");
+  if (!session) redirect("/");
   return session;
 }
 

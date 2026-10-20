@@ -17,12 +17,11 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
     const data = new FormData(event.currentTarget);
     const email = String(data.get("email"));
     const password = String(data.get("password"));
-    const name = String(data.get("name") ?? "");
 
     setError(null);
     startTransition(async () => {
       const { error } = isSignUp
-        ? await authClient.signUp.email({ name, email, password })
+        ? await authClient.signUp.email({ name: "", email, password })
         : await authClient.signIn.email({ email, password });
 
       if (error) {
@@ -36,21 +35,6 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      {isSignUp && (
-        <div className="flex flex-col gap-1">
-          <label htmlFor="name" className="text-sm font-medium">
-            Name
-          </label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            required
-            autoComplete="name"
-            className="rounded-md border border-foreground/20 bg-transparent px-3 py-2"
-          />
-        </div>
-      )}
       <div className="flex flex-col gap-1">
         <label htmlFor="email" className="text-sm font-medium">
           Email
