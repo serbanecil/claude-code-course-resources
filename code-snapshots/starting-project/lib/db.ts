@@ -1,7 +1,7 @@
 import { Database } from "bun:sqlite";
 import path from "node:path";
 
-type Param = string | number | bigint | boolean | null | Uint8Array;
+type Param = string | number | bigint | null | Uint8Array;
 
 const DB_PATH = process.env.DATABASE_PATH ?? path.join(process.cwd(), "app.db");
 
