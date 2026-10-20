@@ -6,6 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Keep your replies extremely concise and focus on conveying the key information. No unnecessary fluff, no long code snippets.
 
+Whenever working with any third-party library or something similar, you MUST look up the official documentation to ensure that you're working with up-to-date information. 
+Use the DocsExplorer subagent for efficient documentation lookup.
+
 ## Commands
 
 Bun is the package manager and runtime (`bun.lock` is the lockfile). npm/pnpm work too, per the README, but prefer Bun.
