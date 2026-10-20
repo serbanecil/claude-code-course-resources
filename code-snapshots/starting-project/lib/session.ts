@@ -7,7 +7,7 @@ export async function getSession() {
   return auth.api.getSession({ headers: await headers() });
 }
 
-/** For server components: redirects to /auth when unauthenticated. */
+/** For server components: redirects to / when unauthenticated. */
 export async function requireSession() {
   const session = await getSession();
   if (!session) redirect("/");
