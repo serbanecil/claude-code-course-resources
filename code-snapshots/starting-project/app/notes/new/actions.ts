@@ -3,12 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { isValidNoteDoc } from "@/lib/note-schema";
 import { createNote } from "@/lib/notes";
 import { getCurrentUserId } from "@/lib/session";
 
 export type CreateNoteState = { error?: string; title?: string } | null;
-
-const docSchema = z.object({ type: z.literal("doc") }).loose();
 
 const formSchema = z.object({
   title: z.string().trim().max(200),
@@ -17,11 +16,11 @@ const formSchema = z.object({
     .max(1_000_000)
     .transform((value, ctx) => {
       try {
-        return docSchema.parse(JSON.parse(value));
-      } catch {
-        ctx.addIssue({ code: "custom", message: "Invalid note content" });
-        return z.NEVER;
-      }
+        const doc: unknown = JSON.parse(value);
+        if (isValidNoteDoc(doc)) return doc;
+      } catch {}
+      ctx.addIssue({ code: "custom", message: "Invalid note content" });
+      return z.NEVER;
     }),
 });
 

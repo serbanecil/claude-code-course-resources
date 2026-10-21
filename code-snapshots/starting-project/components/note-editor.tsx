@@ -6,8 +6,8 @@ import {
   useEditorState,
   type JSONContent,
 } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 import { useState } from "react";
+import { noteExtensions } from "@/lib/note-schema";
 
 const EMPTY_DOC: JSONContent = { type: "doc", content: [] };
 
@@ -15,7 +15,7 @@ const EMPTY_DOC: JSONContent = { type: "doc", content: [] };
 export function NoteEditor() {
   const [json, setJson] = useState<JSONContent>(EMPTY_DOC);
   const editor = useEditor({
-    extensions: [StarterKit.configure({ heading: { levels: [1, 2, 3] } })],
+    extensions: noteExtensions,
     immediatelyRender: false,
     editorProps: {
       attributes: {

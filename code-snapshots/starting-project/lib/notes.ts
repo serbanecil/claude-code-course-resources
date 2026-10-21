@@ -53,3 +53,12 @@ export function createNote(
   if (!row) throw new Error("Failed to create note");
   return toNote(row);
 }
+
+/** Returns the note only if it belongs to `userId`; callers respond 404 on undefined. */
+export function getNote(userId: string, id: string): Note | undefined {
+  const row = get<NoteRow>("SELECT * FROM notes WHERE id = ? AND user_id = ?", [
+    id,
+    userId,
+  ]);
+  return row && toNote(row);
+}
