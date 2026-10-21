@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { isValidNoteDoc } from "./note-schema";
+import { z } from 'zod';
+import { isValidNoteDoc } from './note-schema';
 
 export const noteFormSchema = z.object({
   title: z.string().trim().max(200),
@@ -11,7 +11,7 @@ export const noteFormSchema = z.object({
         const doc: unknown = JSON.parse(value);
         if (isValidNoteDoc(doc)) return doc;
       } catch {}
-      ctx.addIssue({ code: "custom", message: "Invalid note content" });
+      ctx.addIssue({ code: 'custom', message: 'Invalid note content' });
       return z.NEVER;
     }),
 });

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { authClient } from "@/lib/auth-client";
+import { useRouter } from 'next/navigation';
+import { useTransition } from 'react';
+import { authClient } from '@/lib/auth-client';
 
 export function LogoutButton() {
   const router = useRouter();
@@ -13,7 +13,7 @@ export function LogoutButton() {
       await authClient.signOut({
         fetchOptions: {
           onSuccess: () => {
-            router.push("/");
+            router.push('/');
             router.refresh();
           },
         },
@@ -23,12 +23,12 @@ export function LogoutButton() {
 
   return (
     <button
-      type="button"
+      type='button'
       onClick={handleClick}
       disabled={isPending}
-      className="rounded-md border border-foreground/20 px-3 py-1.5 text-sm font-medium disabled:opacity-50"
+      className='rounded-md border border-foreground/20 px-3 py-1.5 text-sm font-medium disabled:opacity-50'
     >
-      {isPending ? "Signing out…" : "Log out"}
+      {isPending ? 'Signing out…' : 'Log out'}
     </button>
   );
 }

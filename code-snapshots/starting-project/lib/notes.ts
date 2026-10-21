@@ -1,4 +1,4 @@
-import { get, query, run } from "./db";
+import { get, query, run } from './db';
 
 export type Note = {
   id: string;
@@ -22,7 +22,7 @@ type NoteRow = {
   updated_at: string;
 };
 
-const EMPTY_DOC = JSON.stringify({ type: "doc", content: [] });
+const EMPTY_DOC = JSON.stringify({ type: 'doc', content: [] });
 
 function toNote(row: NoteRow): Note {
   return {
@@ -37,37 +37,29 @@ function toNote(row: NoteRow): Note {
   };
 }
 
-export function createNote(
-  userId: string,
-  data: { title?: string; contentJson?: string },
-): Note {
+export function createNote(userId: string, data: { title?: string; contentJson?: string }): Note {
   const id = crypto.randomUUID();
-  run(
-    "INSERT INTO notes (id, user_id, title, content_json) VALUES (?, ?, ?, ?)",
-    [id, userId, data.title || "Untitled note", data.contentJson ?? EMPTY_DOC],
-  );
-  const row = get<NoteRow>("SELECT * FROM notes WHERE id = ? AND user_id = ?", [
+  run('INSERT INTO notes (id, user_id, title, content_json) VALUES (?, ?, ?, ?)', [
     id,
     userId,
+    data.title || 'Untitled note',
+    data.contentJson ?? EMPTY_DOC,
   ]);
-  if (!row) throw new Error("Failed to create note");
+  const row = get<NoteRow>('SELECT * FROM notes WHERE id = ? AND user_id = ?', [id, userId]);
+  if (!row) throw new Error('Failed to create note');
   return toNote(row);
 }
 
 /** Returns the note only if it belongs to `userId`; callers respond 404 on undefined. */
 export function getNote(userId: string, id: string): Note | undefined {
-  const row = get<NoteRow>("SELECT * FROM notes WHERE id = ? AND user_id = ?", [
-    id,
-    userId,
-  ]);
+  const row = get<NoteRow>('SELECT * FROM notes WHERE id = ? AND user_id = ?', [id, userId]);
   return row && toNote(row);
 }
 
 export function listNotes(userId: string): Note[] {
-  return query<NoteRow>(
-    "SELECT * FROM notes WHERE user_id = ? ORDER BY updated_at DESC",
-    [userId],
-  ).map(toNote);
+  return query<NoteRow>('SELECT * FROM notes WHERE user_id = ? ORDER BY updated_at DESC', [
+    userId,
+  ]).map(toNote);
 }
 
 /** Returns false if the note doesn't exist or isn't owned by `userId`. */
@@ -76,17 +68,16 @@ export function updateNote(
   id: string,
   data: { title: string; contentJson: string },
 ): boolean {
-  const result = run(
-    "UPDATE notes SET title = ?, content_json = ? WHERE id = ? AND user_id = ?",
-    [data.title || "Untitled note", data.contentJson, id, userId],
-  );
+  const result = run('UPDATE notes SET title = ?, content_json = ? WHERE id = ? AND user_id = ?', [
+    data.title || 'Untitled note',
+    data.contentJson,
+    id,
+    userId,
+  ]);
   return result.changes > 0;
 }
 
 export function deleteNote(userId: string, id: string): boolean {
-  const result = run("DELETE FROM notes WHERE id = ? AND user_id = ?", [
-    id,
-    userId,
-  ]);
+  const result = run('DELETE FROM notes WHERE id = ? AND user_id = ?', [id, userId]);
   return result.changes > 0;
 }

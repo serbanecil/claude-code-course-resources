@@ -1,10 +1,10 @@
-"use server";
+'use server';
 
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import { noteFormSchema } from "@/lib/note-form-schema";
-import { createNote } from "@/lib/notes";
-import { getCurrentUserId } from "@/lib/session";
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+import { noteFormSchema } from '@/lib/note-form-schema';
+import { createNote } from '@/lib/notes';
+import { getCurrentUserId } from '@/lib/session';
 
 export type NoteFormState = { error?: string; title?: string } | null;
 
@@ -13,12 +13,12 @@ export async function createNoteAction(
   formData: FormData,
 ): Promise<NoteFormState> {
   const userId = await getCurrentUserId();
-  if (!userId) redirect("/");
+  if (!userId) redirect('/');
 
-  const title = String(formData.get("title") ?? "");
+  const title = String(formData.get('title') ?? '');
   const parsed = noteFormSchema.safeParse({
     title,
-    content: formData.get("content"),
+    content: formData.get('content'),
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0].message, title };
@@ -29,6 +29,6 @@ export async function createNoteAction(
     contentJson: JSON.stringify(parsed.data.content),
   });
 
-  revalidatePath("/dashboard");
-  redirect("/dashboard");
+  revalidatePath('/dashboard');
+  redirect('/dashboard');
 }

@@ -1,9 +1,9 @@
-import { Database } from "bun:sqlite";
-import path from "node:path";
+import { Database } from 'bun:sqlite';
+import path from 'node:path';
 
 type Param = string | number | bigint | null | Uint8Array;
 
-const DB_PATH = process.env.DATABASE_PATH ?? path.join(process.cwd(), "app.db");
+const DB_PATH = process.env.DATABASE_PATH ?? path.join(process.cwd(), 'app.db');
 
 const SCHEMA = `
   CREATE TABLE IF NOT EXISTS user (
@@ -91,9 +91,9 @@ let instance: Database | undefined;
 export function getDb(): Database {
   if (!instance) {
     const db = new Database(DB_PATH, { create: true });
-    db.run("PRAGMA journal_mode = WAL;");
-    db.run("PRAGMA synchronous = NORMAL;");
-    db.run("PRAGMA foreign_keys = ON;");
+    db.run('PRAGMA journal_mode = WAL;');
+    db.run('PRAGMA synchronous = NORMAL;');
+    db.run('PRAGMA foreign_keys = ON;');
     db.exec(SCHEMA);
     instance = db;
   }
@@ -101,11 +101,17 @@ export function getDb(): Database {
 }
 
 export function query<T>(sql: string, params: Param[] = []): T[] {
-  return getDb().query(sql).all(...params) as T[];
+  return getDb()
+    .query(sql)
+    .all(...params) as T[];
 }
 
 export function get<T>(sql: string, params: Param[] = []): T | undefined {
-  return (getDb().query(sql).get(...params) as T | null) ?? undefined;
+  return (
+    (getDb()
+      .query(sql)
+      .get(...params) as T | null) ?? undefined
+  );
 }
 
 export function run(sql: string, params: Param[] = []) {

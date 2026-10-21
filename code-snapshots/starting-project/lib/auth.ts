@@ -1,6 +1,6 @@
-import { betterAuth } from "better-auth";
-import { nextCookies } from "better-auth/next-js";
-import { getDb } from "./db";
+import { betterAuth } from 'better-auth';
+import { nextCookies } from 'better-auth/next-js';
+import { getDb } from './db';
 
 // Fail fast instead of deriving the origin from request headers or using a default secret.
 function requireEnv(name: string): string {
@@ -9,11 +9,11 @@ function requireEnv(name: string): string {
   return value;
 }
 
-const baseURL = requireEnv("BETTER_AUTH_URL");
+const baseURL = requireEnv('BETTER_AUTH_URL');
 
 export const auth = betterAuth({
   baseURL,
-  secret: requireEnv("BETTER_AUTH_SECRET"),
+  secret: requireEnv('BETTER_AUTH_SECRET'),
   trustedOrigins: [baseURL],
   database: getDb(),
   emailAndPassword: { enabled: true },
