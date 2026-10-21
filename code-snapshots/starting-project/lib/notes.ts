@@ -24,7 +24,7 @@ type NoteRow = {
 };
 
 /** 128 bits of entropy, 22 URL-safe chars. */
-function generateSlug(): string {
+export function generateSlug(): string {
   return randomBytes(16).toString('base64url');
 }
 

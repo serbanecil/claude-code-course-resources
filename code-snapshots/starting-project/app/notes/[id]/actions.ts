@@ -2,8 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { notFound, redirect } from 'next/navigation';
-import type { NoteFormState } from '@/app/notes/new/actions';
-import { noteFormSchema } from '@/lib/note-form-schema';
+import { parseNoteForm, type NoteFormState } from '@/lib/note-form';
 import { deleteNote, updateNote } from '@/lib/notes';
 import { getCurrentUserId } from '@/lib/session';
 
@@ -15,20 +14,10 @@ export async function updateNoteAction(
   const userId = await getCurrentUserId();
   if (!userId) redirect('/');
 
-  const title = String(formData.get('title') ?? '');
-  const parsed = noteFormSchema.safeParse({
-    title,
-    content: formData.get('content'),
-  });
-  if (!parsed.success) {
-    return { error: parsed.error.issues[0].message, title };
-  }
+  const parsed = parseNoteForm(formData);
+  if (!parsed.ok) return parsed.state;
 
-  const updated = updateNote(userId, id, {
-    title: parsed.data.title,
-    contentJson: JSON.stringify(parsed.data.content),
-    isPublic: formData.get('isPublic') === 'on',
-  });
+  const updated = updateNote(userId, id, parsed.data);
   if (!updated) notFound();
 
   revalidatePath('/dashboard');
