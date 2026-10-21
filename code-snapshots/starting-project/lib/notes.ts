@@ -69,3 +69,24 @@ export function listNotes(userId: string): Note[] {
     [userId],
   ).map(toNote);
 }
+
+/** Returns false if the note doesn't exist or isn't owned by `userId`. */
+export function updateNote(
+  userId: string,
+  id: string,
+  data: { title: string; contentJson: string },
+): boolean {
+  const result = run(
+    "UPDATE notes SET title = ?, content_json = ? WHERE id = ? AND user_id = ?",
+    [data.title || "Untitled note", data.contentJson, id, userId],
+  );
+  return result.changes > 0;
+}
+
+export function deleteNote(userId: string, id: string): boolean {
+  const result = run("DELETE FROM notes WHERE id = ? AND user_id = ?", [
+    id,
+    userId,
+  ]);
+  return result.changes > 0;
+}

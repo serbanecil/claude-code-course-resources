@@ -2,37 +2,21 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { z } from "zod";
-import { isValidNoteDoc } from "@/lib/note-schema";
+import { noteFormSchema } from "@/lib/note-form-schema";
 import { createNote } from "@/lib/notes";
 import { getCurrentUserId } from "@/lib/session";
 
-export type CreateNoteState = { error?: string; title?: string } | null;
-
-const formSchema = z.object({
-  title: z.string().trim().max(200),
-  content: z
-    .string()
-    .max(1_000_000)
-    .transform((value, ctx) => {
-      try {
-        const doc: unknown = JSON.parse(value);
-        if (isValidNoteDoc(doc)) return doc;
-      } catch {}
-      ctx.addIssue({ code: "custom", message: "Invalid note content" });
-      return z.NEVER;
-    }),
-});
+export type NoteFormState = { error?: string; title?: string } | null;
 
 export async function createNoteAction(
-  _prev: CreateNoteState,
+  _prev: NoteFormState,
   formData: FormData,
-): Promise<CreateNoteState> {
+): Promise<NoteFormState> {
   const userId = await getCurrentUserId();
   if (!userId) redirect("/");
 
   const title = String(formData.get("title") ?? "");
-  const parsed = formSchema.safeParse({
+  const parsed = noteFormSchema.safeParse({
     title,
     content: formData.get("content"),
   });

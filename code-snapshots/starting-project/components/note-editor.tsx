@@ -12,10 +12,15 @@ import { noteExtensions } from "@/lib/note-schema";
 const EMPTY_DOC: JSONContent = { type: "doc", content: [] };
 
 /** Rich text input; submits the TipTap JSON as the `content` form field. */
-export function NoteEditor() {
-  const [json, setJson] = useState<JSONContent>(EMPTY_DOC);
+export function NoteEditor({
+  initialContent = EMPTY_DOC,
+}: {
+  initialContent?: JSONContent;
+}) {
+  const [json, setJson] = useState<JSONContent>(initialContent);
   const editor = useEditor({
     extensions: noteExtensions,
+    content: initialContent,
     immediatelyRender: false,
     editorProps: {
       attributes: {
