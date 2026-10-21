@@ -100,6 +100,17 @@ export function updateNote(
   return result.changes > 0;
 }
 
+/** Toggles sharing only; keeps the existing slug while public. Returns false if not owned. */
+export function setNotePublic(userId: string, id: string, isPublic: boolean): boolean {
+  const result = run(
+    `UPDATE notes SET is_public = ?,
+       public_slug = CASE WHEN ? = 1 THEN COALESCE(public_slug, ?) ELSE NULL END
+     WHERE id = ? AND user_id = ?`,
+    [isPublic ? 1 : 0, isPublic ? 1 : 0, generateSlug(), id, userId],
+  );
+  return result.changes > 0;
+}
+
 /** Looks up a publicly shared note by slug; no ownership check, so never expose `userId`. */
 export function getPublicNote(
   slug: string,

@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { notFound, redirect } from 'next/navigation';
 import { parseNoteForm, type NoteFormState } from '@/lib/note-form';
-import { deleteNote, updateNote } from '@/lib/notes';
+import { deleteNote, setNotePublic, updateNote } from '@/lib/notes';
 import { getCurrentUserId } from '@/lib/session';
 
 export async function updateNoteAction(
@@ -32,4 +32,13 @@ export async function deleteNoteAction(id: string) {
 
   revalidatePath('/dashboard');
   redirect('/dashboard');
+}
+
+export async function setNotePublicAction(id: string, isPublic: boolean) {
+  const userId = await getCurrentUserId();
+  if (!userId) redirect('/');
+  if (!setNotePublic(userId, id, isPublic)) notFound();
+
+  revalidatePath('/dashboard');
+  revalidatePath(`/notes/${id}`);
 }

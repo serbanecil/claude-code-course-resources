@@ -17,6 +17,7 @@ export default async function EditNotePage({ params }: { params: Promise<{ id: s
         initialTitle={note.title}
         initialContent={JSON.parse(note.contentJson)}
         initialIsPublic={note.isPublic}
+        publicSlug={note.publicSlug}
         submitLabel='Save changes'
         cancelHref={`/notes/${id}`}
       />

@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DeleteNoteButton } from '@/components/delete-note-button';
+import { ShareLink } from '@/components/share-link';
+import { ShareToggle } from '@/components/share-toggle';
 import { NoteRenderer } from '@/components/note-renderer';
 import { getNote } from '@/lib/notes';
 import { requireSession } from '@/lib/session';
@@ -39,6 +41,11 @@ export default async function NotePage({ params }: { params: Promise<{ id: strin
               </span>
             )}
           </p>
+          {note.isPublic && note.publicSlug && (
+            <div className='mt-2 flex flex-wrap items-center gap-3'>
+              <ShareLink slug={note.publicSlug} />
+            </div>
+          )}
         </div>
         <div className='flex shrink-0 items-center gap-2'>
           <Link
@@ -47,17 +54,15 @@ export default async function NotePage({ params }: { params: Promise<{ id: strin
           >
             Edit
           </Link>
+          <ShareToggle
+            id={note.id}
+            isPublic={note.isPublic}
+            publicSlug={note.publicSlug}
+            hideLink
+          />
           <DeleteNoteButton id={note.id} />
         </div>
       </div>
-      {note.isPublic && note.publicSlug && (
-        <p className='text-sm'>
-          Shared publicly:{' '}
-          <Link href={`/p/${note.publicSlug}`} className='underline'>
-            /p/{note.publicSlug}
-          </Link>
-        </p>
-      )}
       <NoteRenderer doc={JSON.parse(note.contentJson)} />
     </main>
   );

@@ -5,12 +5,14 @@ import Link from 'next/link';
 import type { JSONContent } from '@tiptap/react';
 import type { NoteFormState } from '@/app/notes/new/actions';
 import { NoteEditor } from './note-editor';
+import { ShareLink } from './share-link';
 
 export function NoteForm({
   action: formAction,
   initialTitle,
   initialContent,
   initialIsPublic = false,
+  publicSlug,
   submitLabel,
   cancelHref,
 }: {
@@ -18,6 +20,7 @@ export function NoteForm({
   initialTitle?: string;
   initialContent?: JSONContent;
   initialIsPublic?: boolean;
+  publicSlug?: string | null;
   submitLabel: string;
   cancelHref?: string;
 }) {
@@ -54,6 +57,11 @@ export function NoteForm({
         />
         Share publicly (anyone with the link can view)
       </label>
+      {initialIsPublic && publicSlug && (
+        <div className='flex flex-wrap items-center gap-3'>
+          <ShareLink slug={publicSlug} />
+        </div>
+      )}
       {state?.error && (
         <p role='alert' className='text-sm text-red-600 dark:text-red-400'>
           {state.error}

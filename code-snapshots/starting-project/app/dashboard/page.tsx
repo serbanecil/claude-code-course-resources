@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ShareToggle } from '@/components/share-toggle';
 import { listNotes } from '@/lib/notes';
 import { requireSession } from '@/lib/session';
 
@@ -23,19 +24,22 @@ export default async function DashboardPage() {
       ) : (
         <ul className='flex flex-col gap-3'>
           {notes.map((note) => (
-            <li key={note.id}>
+            <li key={note.id} className='flex flex-wrap items-center gap-3'>
               <Link
                 href={`/notes/${note.id}`}
-                className='flex items-baseline justify-between gap-4 rounded-md border border-foreground/25 px-4 py-3 hover:bg-foreground/5'
+                className='flex flex-1 items-baseline justify-between gap-4 rounded-md border border-foreground/25 px-4 py-3 hover:bg-foreground/5'
               >
-                <span className='font-medium'>
-                  {note.title}
-                  {note.isPublic && <span className='ml-2 text-xs opacity-70'>Shared</span>}
-                </span>
+                <span className='font-medium'>{note.title}</span>
                 <time dateTime={note.updatedAt} className='text-sm opacity-70'>
                   {dateFormat.format(new Date(note.updatedAt))}
                 </time>
               </Link>
+              <ShareToggle
+                id={note.id}
+                isPublic={note.isPublic}
+                publicSlug={note.publicSlug}
+                compact
+              />
             </li>
           ))}
         </ul>
