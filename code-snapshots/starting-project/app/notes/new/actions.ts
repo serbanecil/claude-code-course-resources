@@ -27,6 +27,7 @@ export async function createNoteAction(
   createNote(userId, {
     title: parsed.data.title,
     contentJson: JSON.stringify(parsed.data.content),
+    isPublic: formData.get('isPublic') === 'on',
   });
 
   revalidatePath('/dashboard');

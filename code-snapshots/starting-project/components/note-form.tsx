@@ -10,12 +10,14 @@ export function NoteForm({
   action: formAction,
   initialTitle,
   initialContent,
+  initialIsPublic = false,
   submitLabel,
   cancelHref,
 }: {
   action: (prev: NoteFormState, formData: FormData) => Promise<NoteFormState>;
   initialTitle?: string;
   initialContent?: JSONContent;
+  initialIsPublic?: boolean;
   submitLabel: string;
   cancelHref?: string;
 }) {
@@ -43,6 +45,15 @@ export function NoteForm({
         </label>
         <NoteEditor initialContent={initialContent} />
       </div>
+      <label className='flex items-center gap-2 text-sm font-medium'>
+        <input
+          type='checkbox'
+          name='isPublic'
+          defaultChecked={initialIsPublic}
+          className='size-4'
+        />
+        Share publicly (anyone with the link can view)
+      </label>
       {state?.error && (
         <p role='alert' className='text-sm text-red-600 dark:text-red-400'>
           {state.error}

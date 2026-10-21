@@ -27,6 +27,7 @@ export async function updateNoteAction(
   const updated = updateNote(userId, id, {
     title: parsed.data.title,
     contentJson: JSON.stringify(parsed.data.content),
+    isPublic: formData.get('isPublic') === 'on',
   });
   if (!updated) notFound();
 

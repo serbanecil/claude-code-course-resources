@@ -28,7 +28,10 @@ export default async function DashboardPage() {
                 href={`/notes/${note.id}`}
                 className='flex items-baseline justify-between gap-4 rounded-md border border-foreground/25 px-4 py-3 hover:bg-foreground/5'
               >
-                <span className='font-medium'>{note.title}</span>
+                <span className='font-medium'>
+                  {note.title}
+                  {note.isPublic && <span className='ml-2 text-xs opacity-70'>Shared</span>}
+                </span>
                 <time dateTime={note.updatedAt} className='text-sm opacity-70'>
                   {dateFormat.format(new Date(note.updatedAt))}
                 </time>

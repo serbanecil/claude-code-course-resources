@@ -50,6 +50,14 @@ export default async function NotePage({ params }: { params: Promise<{ id: strin
           <DeleteNoteButton id={note.id} />
         </div>
       </div>
+      {note.isPublic && note.publicSlug && (
+        <p className='text-sm'>
+          Shared publicly:{' '}
+          <Link href={`/p/${note.publicSlug}`} className='underline'>
+            /p/{note.publicSlug}
+          </Link>
+        </p>
+      )}
       <NoteRenderer doc={JSON.parse(note.contentJson)} />
     </main>
   );
